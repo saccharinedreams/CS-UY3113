@@ -133,6 +133,10 @@
   <ItemGroup>
     <ClInclude Include="ShaderProgram.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="flying bug.png" />
+    <Image Include="orange circle.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
