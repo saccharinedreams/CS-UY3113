@@ -1,0 +1,3 @@
+﻿  main.cpp
+C:\Users\calia\Documents\GitHub\CS-UY3113\P3\SDLProject\main.cpp(157,23): warning C4018: '<': signed/unsigned mismatch
+  SDLProject.vcxproj -> C:\Users\calia\Documents\GitHub\CS-UY3113\P3\SDLProject\Debug\SDLProject.exe
