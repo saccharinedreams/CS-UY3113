@@ -1,10 +1,10 @@
 ﻿  main.cpp
-C:\Users\calia\Documents\GitHub\CS-UY3113\P2\SDLProject\main.cpp(137,34): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\calia\Documents\GitHub\CS-UY3113\P2\SDLProject\main.cpp(148,34): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\calia\Documents\GitHub\CS-UY3113\P2\SDLProject\main.cpp(138,34): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\calia\Documents\GitHub\CS-UY3113\P2\SDLProject\main.cpp(149,34): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float

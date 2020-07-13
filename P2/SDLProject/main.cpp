@@ -5,6 +5,7 @@
 #endif
 
 #define GL_GLEXT_PROTOTYPES 1
+#include <SDL_mixer.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include "glm/mat4x4.hpp"
@@ -44,6 +45,9 @@ GLuint ball_TextureID;
 
 bool gameStart = true;
 
+Mix_Music *music;
+Mix_Chunk* bounce;
+
 GLuint LoadTexture(const char* filePath) {
     int w, h, n;
     unsigned char* image = stbi_load(filePath, &w, &h, &n, STBI_rgb_alpha);
@@ -62,7 +66,7 @@ GLuint LoadTexture(const char* filePath) {
 }
 
 void Initialize() {
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     displayWindow = SDL_CreateWindow("Pong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                       640, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
@@ -75,6 +79,13 @@ void Initialize() {
     glViewport(0, 0, 640, 480);
 
     program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
+
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+    music = Mix_LoadMUS("dooblydoo.mp3");
+    Mix_PlayMusic(music, -1);
+    Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
+
+    bounce = Mix_LoadWAV("bounce.wav");
 
     viewMatrix = glm::mat4(1.0f);
     modelMatrix = glm::mat4(1.0f);
@@ -156,12 +167,14 @@ void Update() {
     ball_matrix = glm::mat4(1.0f);
     //If the ball hits a horizontal wall (ceiling or floor), reverse its y direction.
     if (ball_position.y + ball_height / 2.0f > 3.7f) {
+        Mix_PlayChannel(-1, bounce, 0);
         ball_position.y = 3.4f; // This fixes the glitch of the ball getting stuck reversing its "y"
                                 // movement within the ceiling by resetting the ball slightly under
                                 // the ceiling.
         ball_movement.y *= -1.0f;
     }
     else if (ball_position.y - ball_height / 2.0f < -3.7f) {
+        Mix_PlayChannel(-1, bounce, 0);
         ball_position.y = -3.4f; // This fixes the glitch of the ball getting stuck reversing its "y"
                                 // movement within the floor by resetting the ball slightly above
                                 // the floor.
@@ -170,6 +183,7 @@ void Update() {
     //If the ball hits a paddle, reverse its x direction.
     else if ((fabs(red_position.x - ball_position.x) - ((ball_width - 0.1f + paddle_width) / 2) < 0 &&
               fabs(red_position.y - ball_position.y) - ((ball_height - 0.1f + paddle_height) / 2) < 0)) {
+        Mix_PlayChannel(-1, bounce, 0);
         ball_position.x -= 0.1f; // This fixes the glitch of the ball getting stuck reversing its "x"
                                  // movement in within the boundaries of the paddle by resetting the
                                  // ball outside of the boundary.
@@ -177,6 +191,7 @@ void Update() {
    }
     else if ((fabs(blue_position.x - ball_position.x) - ((ball_width - 0.1f + paddle_width) / 2) < 0 &&
               fabs(blue_position.y - ball_position.y) - ((ball_height - 0.1f + paddle_height) / 2) < 0)) {
+        Mix_PlayChannel(-1, bounce, 0);
         ball_position.x += 0.1f; // This fixes the glitch of the ball getting stuck reversing its "x"
                                  // movement in within the boundaries of the paddle by resetting the
                                  // ball outside of the boundary.
