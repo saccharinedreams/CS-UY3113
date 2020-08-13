@@ -161,7 +161,7 @@ void Render() {
     //currentScene->state.enemies[0].Render(&program);
     if(!currentScene->state.won && currentScene->state.player->lives > 0) 
         currentScene->Render(&program);
-    if(currentScene->state.won){
+    if(currentScene->state.player->position.x > 5){
         missionComplete = true;
         viewMatrix = glm::mat4(1.0f);
         program.SetViewMatrix(viewMatrix);
