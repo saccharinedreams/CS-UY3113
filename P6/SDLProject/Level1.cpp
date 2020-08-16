@@ -51,7 +51,7 @@ void Level1::Initialize() {
     GLuint monsterTextureID = Util::LoadTexture("monster.png");
     state.enemies[0].textureID = monsterTextureID;
     state.enemies[0].position = glm::vec3(2.0f, 3.0f, 0);
-    state.enemies[0].speed = 0.3;
+    state.enemies[0].speed = 0.6;
     state.enemies[0].aiType = FOLLOWER;
     state.enemies[0].aiState = FOLLOW;
     state.enemies[0].isActive = true;
@@ -59,8 +59,8 @@ void Level1::Initialize() {
     state.enemies[1].entityType = ENEMY;
     GLuint guardTextureID = Util::LoadTexture("guard.png");
     state.enemies[1].textureID = guardTextureID;
-    state.enemies[1].position = glm::vec3(3.0f, -7.0f, 0);
-    state.enemies[1].spawn = glm::vec3(3.0f, -7.0f, 0);
+    state.enemies[1].position = glm::vec3(2.0f, -7.0f, 0);
+    state.enemies[1].spawn = glm::vec3(2.0f, -7.0f, 0);
     state.enemies[1].speed = 0.3;
     state.enemies[1].aiType = GUARD;
     state.enemies[1].aiState = IDLE;
@@ -79,8 +79,8 @@ void Level1::Initialize() {
     state.enemies[3].entityType = ENEMY;
     GLuint droneTextureID = Util::LoadTexture("drone.png");
     state.enemies[3].textureID = droneTextureID;
-    state.enemies[3].position = glm::vec3(6.0f, -6.0f, 0);
-    state.enemies[3].spawn = glm::vec3(4.0f, -5.0f, 0);
+    state.enemies[3].position = glm::vec3(6.0f, -4.0f, 0);
+    state.enemies[3].spawn = glm::vec3(4.0f, -4.0f, 0);
     state.enemies[3].speed = 0.8;
     state.enemies[3].aiType = HORIZONTAL_PATROLLER;
     state.enemies[3].aiState = PATROL;

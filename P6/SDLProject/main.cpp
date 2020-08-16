@@ -33,6 +33,8 @@ Scene* currentScene;
 Scene* sceneList[2];
 
 Mix_Music* music;
+Mix_Chunk* hurt;
+int hurtCounter = 0;
 
 void SwitchToScene(Scene* scene) {
     currentScene = scene;
@@ -56,9 +58,11 @@ void Initialize() {
     program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
 
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
-    music = Mix_LoadMUS("crypto.mp3");
+    music = Mix_LoadMUS("menu.wav");
     Mix_PlayMusic(music, -1);
-    Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
+    Mix_VolumeMusic(MIX_MAX_VOLUME/4);
+
+    hurt = Mix_LoadWAV("hurt.wav");
 
     viewMatrix = glm::mat4(1.0f);
     modelMatrix = glm::mat4(1.0f);
@@ -105,7 +109,12 @@ void ProcessInput() {
             case SDLK_SPACE:
                 break;
             case SDLK_RETURN:
-                if (currentScene == sceneList[0]) SwitchToScene(sceneList[1]);
+                if (currentScene == sceneList[0]) {
+                    SwitchToScene(sceneList[1]);
+                    music = Mix_LoadMUS("maze.wav");
+                    Mix_PlayMusic(music, -1);
+                    Mix_VolumeMusic(MIX_MAX_VOLUME/4);
+                }
                 break;
             }
             break; // SDL_KEYDOWN
@@ -188,6 +197,10 @@ void Render() {
     else if (!(currentScene->state.player->isActive)) {
         viewMatrix = glm::mat4(1.0f);
         program.SetViewMatrix(viewMatrix);
+        if (hurtCounter == 0) {
+            Mix_PlayChannel(-1, hurt, 0);
+            hurtCounter += 1;
+        }
         Util::DrawText(&program, Util::LoadTexture("font.png"), "You Lose!",
             0.5f, -0.2f, glm::vec3(-1.0f, 0.5f, 0));
     }

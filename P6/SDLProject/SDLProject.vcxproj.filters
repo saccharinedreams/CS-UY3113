@@ -68,4 +68,8 @@
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\..\..\Desktop\maze.mp3" />
+    <Media Include="..\..\..\..\..\Desktop\menu.mp3" />
+  </ItemGroup>
 </Project>

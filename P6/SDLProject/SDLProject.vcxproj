@@ -148,6 +148,10 @@
   <ItemGroup>
     <Image Include="..\..\player.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\..\..\Desktop\maze.mp3" />
+    <Media Include="..\..\..\..\..\Desktop\menu.mp3" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

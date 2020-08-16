@@ -1,2 +1,6 @@
-﻿  main.cpp
+﻿  Level1.cpp
+C:\Users\calia\Documents\GitHub\CS-UY3113\P6\SDLProject\Level1.cpp(54,33): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\calia\Documents\GitHub\CS-UY3113\P6\SDLProject\Level1.cpp(64,33): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\calia\Documents\GitHub\CS-UY3113\P6\SDLProject\Level1.cpp(74,33): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\calia\Documents\GitHub\CS-UY3113\P6\SDLProject\Level1.cpp(84,33): warning C4305: '=': truncation from 'double' to 'float'
   SDLProject.vcxproj -> C:\Users\calia\Documents\GitHub\CS-UY3113\P6\SDLProject\Debug\SDLProject.exe
