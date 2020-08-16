@@ -17,8 +17,8 @@
 
 enum EntityType {PLAYER, PLATFORM, ENEMY};
 
-enum AIType { WALKER, WAITANDGO, LURCHER, GLIDER };
-enum AIState {IDLE, WALKING, ATTACKING, LURCHING, GLIDING};
+enum AIType { FOLLOWER, GUARD, VERTICAL_PATROLLER, HORIZONTAL_PATROLLER};
+enum AIState {IDLE, FOLLOW, PATROL};
 
 class Entity {
 public:
@@ -29,7 +29,8 @@ public:
     glm::vec3 position;
     glm::vec3 movement;
     glm::vec3 velocity;
-    
+    glm::vec3 spawn; 
+
     float width = 1;
     float height = 1;
 
@@ -72,6 +73,7 @@ public:
     void CheckCollisionsX(Entity* objects, int objectCount);
     void CheckCollisionsY(Map* map);
     void CheckCollisionsX(Map* map);
+    void CheckCollisionsXY(Map* map);
 
     void CheckIfPlayerKilled(Entity* enemies, int enemyCount);
     void Update(float deltaTime, Entity* player, Entity* objects, int objectCount, Map* map);
@@ -83,4 +85,8 @@ public:
     void AIWaitAndGo(Entity *player);
     void AILurcher(Entity *player);
     void AIGlider(Entity *player);
+    void AIFollower(Entity* player);
+    void AIGuard(Entity* player);
+    void AIVerticalPatroller(Entity* player);
+    void AIHorizontalPatroller(Entity* player);
 };

@@ -14,22 +14,21 @@ unsigned int menu_data[] =
  3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3
 };
 
-void menu::Initialize(int livesLeft) {
+void menu::Initialize() {
 
     state.nextScene = 0;
-    GLuint mapTextureID = Util::LoadTexture("tileset.png");
+    GLuint mapTextureID = Util::LoadTexture("laser_tileset.png");
     state.map = new Map(MENU_WIDTH, MENU_HEIGHT, menu_data, mapTextureID, 1.0f, 4, 1);
     // Initialize Game Objects
     // Initialize Player    
     state.player = new Entity();
     state.player->entityType = PLAYER;
-    state.player->lives = livesLeft;
     state.player->position = glm::vec3(2, -3, 0);
     state.player->movement = glm::vec3(0);
     state.player->speed = 3.5f;
     state.player->height = 0.8f;
     state.player->width = 0.7f;
-    state.player->textureID = Util::LoadTexture("art.png");
+    state.player->textureID = Util::LoadTexture("player.png");
 }
 
 void menu::Update(float deltaTime) {

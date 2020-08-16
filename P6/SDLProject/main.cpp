@@ -30,19 +30,19 @@ bool missionComplete = false;
 bool missionFail = false;
 
 Scene* currentScene;
-Scene* sceneList[4];
+Scene* sceneList[2];
 
 Mix_Music* music;
-Mix_Chunk* jump;
 
-void SwitchToScene(Scene* scene, int lives) {
+void SwitchToScene(Scene* scene) {
     currentScene = scene;
-    currentScene->Initialize(lives);
+    currentScene->Initialize();
 }
 
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-    displayWindow = SDL_CreateWindow("Rise of the AI", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
+    displayWindow = SDL_CreateWindow("Escape from Area 51", 
+                                     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
                                      640, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
@@ -50,7 +50,8 @@ void Initialize() {
 #ifdef _WINDOWS
     glewInit();
 #endif
-    glViewport(0, 0, 640, 480);
+    //glViewport(0, 0, 960, 720); //Change the view port to make the camera zoomed in.
+    glViewport(0, 0, 240, 180);
 
     program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
 
@@ -58,8 +59,6 @@ void Initialize() {
     music = Mix_LoadMUS("crypto.mp3");
     Mix_PlayMusic(music, -1);
     Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
-
-    jump = Mix_LoadWAV("jump.wav");
 
     viewMatrix = glm::mat4(1.0f);
     modelMatrix = glm::mat4(1.0f);
@@ -70,7 +69,7 @@ void Initialize() {
 
     glUseProgram(program.programID);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.87f, 0.72f, 0.53f, 1.0f);
     glEnable(GL_BLEND);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -78,7 +77,7 @@ void Initialize() {
     // Initialize the levels and start at the first one
     sceneList[0] = new menu();
     sceneList[1] = new Level1();
-    SwitchToScene(sceneList[0], 3);
+    SwitchToScene(sceneList[0]);
 }
 
 void ProcessInput() {
@@ -106,7 +105,7 @@ void ProcessInput() {
             case SDLK_SPACE:
                 break;
             case SDLK_RETURN:
-                if (currentScene == sceneList[0]) SwitchToScene(sceneList[1], 3);
+                if (currentScene == sceneList[0]) SwitchToScene(sceneList[1]);
                 break;
             }
             break; // SDL_KEYDOWN
@@ -115,10 +114,22 @@ void ProcessInput() {
 
     const Uint8* keys = SDL_GetKeyboardState(NULL);
 
-    if (keys[SDL_SCANCODE_LEFT]) currentScene->state.player->movement.x = -1.0f;
-    else if (keys[SDL_SCANCODE_RIGHT]) currentScene->state.player->movement.x = 1.0f;
-    else if (keys[SDL_SCANCODE_UP]) currentScene->state.player->movement.y = 1.0f;
-    else if (keys[SDL_SCANCODE_DOWN]) currentScene->state.player->movement.y = -1.0f;
+    if (keys[SDL_SCANCODE_LEFT]) {
+        currentScene->state.player->movement.x = -1.0f;
+        currentScene->state.player->movement.y = 0.0f;
+    }
+    else if (keys[SDL_SCANCODE_RIGHT]) {
+        currentScene->state.player->movement.x = 1.0f;
+        currentScene->state.player->movement.y = 0.0f;
+    }
+    else if (keys[SDL_SCANCODE_UP]) {
+        currentScene->state.player->movement.y = 1.0f;
+        currentScene->state.player->movement.x = 0.0f;
+    }
+    else if (keys[SDL_SCANCODE_DOWN]) {
+        currentScene->state.player->movement.y = -1.0f;
+        currentScene->state.player->movement.x = 0.0f;
+    }
     if (glm::length(currentScene->state.player->movement) > 1.0f)
         currentScene->state.player->movement = glm::normalize(currentScene->state.player->movement);
 
@@ -147,11 +158,17 @@ void Update() {
     accumulator = deltaTime;
 
     viewMatrix = glm::mat4(1.0f);
-    if (currentScene->state.player->position.x > -100 && 
+    if (currentScene->state.player->position.x > -100 &&
         currentScene->state.player->position.x < 100) {
         viewMatrix = glm::translate
-                    (viewMatrix, glm::vec3(-currentScene->state.player->position.x, 
-                                           -currentScene->state.player->position.y, 0));
+        (viewMatrix, glm::vec3(-currentScene->state.player->position.x,
+            -currentScene->state.player->position.y, 0));
+        /**
+        (viewMatrix, glm::vec3(-currentScene->state.player->position.x - 1.25,
+            -currentScene->state.player->position.y - 0.875, 0));
+           */
+        // 2.5 is half of the window height (5) and 1.875 is half of the window width (3.5)
+        // Subtract by those numbers to shift the camera to the center.
     }
 }
   
@@ -159,16 +176,16 @@ void Render() {
     glClear(GL_COLOR_BUFFER_BIT);
     program.SetViewMatrix(viewMatrix);  
     //currentScene->state.enemies[0].Render(&program);
-    if(!currentScene->state.won && currentScene->state.player->lives > 0) 
+    if(!currentScene->state.won && currentScene->state.player->isActive) 
         currentScene->Render(&program);
-    if(currentScene->state.player->position.x > 5){
+    if(currentScene->state.player->position.y < -42.5){
         missionComplete = true;
         viewMatrix = glm::mat4(1.0f);
         program.SetViewMatrix(viewMatrix);
         Util::DrawText(&program, Util::LoadTexture("font.png"), "You Win!",
             0.5f, -0.2f, glm::vec3(2.0f, 3.0f, 0));
     }
-    else if (currentScene->state.player->lives <= 0) {
+    else if (!(currentScene->state.player->isActive)) {
         viewMatrix = glm::mat4(1.0f);
         program.SetViewMatrix(viewMatrix);
         Util::DrawText(&program, Util::LoadTexture("font.png"), "You Lose!",
@@ -189,7 +206,7 @@ int main(int argc, char* argv[]) {
         ProcessInput();
         Update();
         if (currentScene->state.nextScene > 0) SwitchToScene(sceneList
-            [currentScene->state.nextScene], currentScene->state.player->lives);
+            [currentScene->state.nextScene]);
         Render();
     }
 
