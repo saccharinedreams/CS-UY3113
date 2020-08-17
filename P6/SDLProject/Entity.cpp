@@ -187,6 +187,13 @@ void Entity::AIGuard(Entity* player) {
     switch (aiState) {
     case IDLE:
         if (glm::distance(position, player->position) < 2.5f) aiState = FOLLOW;
+        else {
+            if (position.y < spawn.y && movement.y <= 0) movement.y = 1;
+            else if (position.y > spawn.y && movement.y >= 0) movement.y = -1;
+
+            if (position.x < spawn.x && movement.x <= 0) movement.x = 1;
+            else if (position.x > spawn.x && movement.x >= 0) movement.x = -1;
+        }
         break;
     case FOLLOW:
         if (glm::distance(position, player->position) < 2.5f) {
@@ -210,7 +217,7 @@ void Entity::AIGuard(Entity* player) {
 
 void Entity::AIVerticalPatroller(Entity* player) {
     switch (aiState) {
-    case PATROL:
+    case PATROLY:
         if (position == spawn) movement.y = -1;
         else if (position.y <= spawn.y - 1.5f && movement.y <= 0) movement.y = 1;
         else if (position.y >= spawn.y + 1.5f && movement.y >= 0) movement.y = -1;
@@ -219,7 +226,7 @@ void Entity::AIVerticalPatroller(Entity* player) {
 
 void Entity::AIHorizontalPatroller(Entity* player) {
     switch (aiState) {
-    case PATROL:
+    case PATROLX:
         if (position == spawn) movement.x = -1;
         else if (position.x <= spawn.x - 1.5f && movement.x <= 0) movement.x = 1;
         else if (position.x >= spawn.x + 1.5f && movement.x >= 0) movement.x = -1;
@@ -261,6 +268,7 @@ void Entity::Update(float deltaTime, Entity* player, Entity* objects, int object
             isActive = false;
         }
     }
+    
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
     

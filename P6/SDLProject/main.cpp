@@ -52,8 +52,8 @@ void Initialize() {
 #ifdef _WINDOWS
     glewInit();
 #endif
-    //glViewport(0, 0, 960, 720); //Change the view port to make the camera zoomed in.
-    glViewport(0, 0, 240, 180);
+    glViewport(0, 0, 960, 720); //Change the view port to make the camera zoomed in.
+    //glViewport(0, 0, 240, 180);
 
     program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
 
@@ -109,11 +109,12 @@ void ProcessInput() {
             case SDLK_SPACE:
                 break;
             case SDLK_RETURN:
-                if (currentScene == sceneList[0]) {
+                if (currentScene == sceneList[0] || missionFail) {
                     SwitchToScene(sceneList[1]);
                     music = Mix_LoadMUS("maze.wav");
                     Mix_PlayMusic(music, -1);
                     Mix_VolumeMusic(MIX_MAX_VOLUME/4);
+                    hurtCounter = 0;
                 }
                 break;
             }
@@ -170,12 +171,12 @@ void Update() {
     if (currentScene->state.player->position.x > -100 &&
         currentScene->state.player->position.x < 100) {
         viewMatrix = glm::translate
-        (viewMatrix, glm::vec3(-currentScene->state.player->position.x,
-            -currentScene->state.player->position.y, 0));
-        /**
+        //(viewMatrix, glm::vec3(-currentScene->state.player->position.x,
+        //    -currentScene->state.player->position.y, 0));
+        
         (viewMatrix, glm::vec3(-currentScene->state.player->position.x - 1.25,
             -currentScene->state.player->position.y - 0.875, 0));
-           */
+          
         // 2.5 is half of the window height (5) and 1.875 is half of the window width (3.5)
         // Subtract by those numbers to shift the camera to the center.
     }
@@ -192,7 +193,7 @@ void Render() {
         viewMatrix = glm::mat4(1.0f);
         program.SetViewMatrix(viewMatrix);
         Util::DrawText(&program, Util::LoadTexture("font.png"), "You Win!",
-            0.5f, -0.2f, glm::vec3(2.0f, 3.0f, 0));
+            0.5f, -0.2f, glm::vec3(-2.75f, -1.25f, 0));
     }
     else if (!(currentScene->state.player->isActive)) {
         viewMatrix = glm::mat4(1.0f);
@@ -202,7 +203,8 @@ void Render() {
             hurtCounter += 1;
         }
         Util::DrawText(&program, Util::LoadTexture("font.png"), "You Lose!",
-            0.5f, -0.2f, glm::vec3(-1.0f, 0.5f, 0));
+            0.5f, -0.2f, glm::vec3(-2.75f, -1.25f, 0));
+        missionFail = true;
     }
     SDL_GL_SwapWindow(displayWindow);
 }

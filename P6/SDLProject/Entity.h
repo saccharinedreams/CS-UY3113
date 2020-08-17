@@ -18,7 +18,7 @@
 enum EntityType {PLAYER, PLATFORM, ENEMY};
 
 enum AIType { FOLLOWER, GUARD, VERTICAL_PATROLLER, HORIZONTAL_PATROLLER};
-enum AIState {IDLE, FOLLOW, PATROL};
+enum AIState {IDLE, FOLLOW, PATROLX, PATROLY};
 
 class Entity {
 public:
